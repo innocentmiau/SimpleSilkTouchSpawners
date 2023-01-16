@@ -1,0 +1,3 @@
+# Permissions: 'simpleSTS.break' & 'simpleSTS.place'
+needsPermissionToBreak: false
+needsPermissionToPlace: false
