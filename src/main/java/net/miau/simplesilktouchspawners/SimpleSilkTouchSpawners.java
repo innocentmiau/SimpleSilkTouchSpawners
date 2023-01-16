@@ -24,8 +24,24 @@ import java.util.ArrayList;
 
 public final class SimpleSilkTouchSpawners extends JavaPlugin implements Listener {
 
+    private boolean needsPermissionToBreak = false;
+    private boolean needsPermissionToPlace = false;
+
     @Override
     public void onEnable() {
+        getConfig().options().header("Permissions: 'simpleSTS.break' & 'simpleSTS.place'");
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        if (!getConfig().contains("needsPermissionToBreak")) {
+            getConfig().set("needsPermissionToBreak", this.needsPermissionToBreak);
+            saveConfig();
+        }
+        this.needsPermissionToBreak = getConfig().getBoolean("needsPermissionToBreak");
+        if (!getConfig().contains("needsPermissionToPlace")) {
+            getConfig().set("needsPermissionToPlace", this.needsPermissionToPlace);
+            saveConfig();
+        }
+        this.needsPermissionToPlace = getConfig().getBoolean("needsPermissionToPlace");
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -36,7 +52,7 @@ public final class SimpleSilkTouchSpawners extends JavaPlugin implements Listene
             String s = stream(url);
             String version = s.substring(s.indexOf("\"tag_name\":\"") + 13, s.indexOf("\"target_commitish\"") - 2);
             if (!version.equals(this.getDescription().getVersion())) {
-                getLogger().info("---[SimpleTimber]---");
+                getLogger().info("---[SimpleSilkTouchSpawners]---");
                 getLogger().info("[>] There is a new update available.");
                 getLogger().info("[>] current version: " + this.getDescription().getVersion());
                 getLogger().info("[>] latest version: " + version);
@@ -71,6 +87,7 @@ public final class SimpleSilkTouchSpawners extends JavaPlugin implements Listene
         if (event.getBlock().getType().toString().contains("SPAWNER") && (
                 i.getType() == Material.DIAMOND_PICKAXE || i.getType().toString().contains("NETHERITE_PICKAXE")) &&
                 i.getEnchantments().containsKey(Enchantment.SILK_TOUCH)) {
+            if (this.needsPermissionToBreak && !player.hasPermission("simpleSTS.break")) return;
             event.setExpToDrop(0);
             CreatureSpawner cs = (CreatureSpawner) event.getBlock().getState();
             String type = cs.getCreatureTypeName().toString();
@@ -100,6 +117,7 @@ public final class SimpleSilkTouchSpawners extends JavaPlugin implements Listene
         if (block.getType().toString().equalsIgnoreCase("SPAWNER")
                 || block.getType().toString().equalsIgnoreCase("MOB_SPAWNER")) {
             Player player = event.getPlayer();
+            if (this.needsPermissionToPlace && !player.hasPermission("simpleSTS.place")) return;
             ItemStack i = player.getItemInHand();
             if (i.getItemMeta() != null && i.getItemMeta().getLore() != null && i.getItemMeta().getLore().size() > 0) {
                 CreatureSpawner cs = (CreatureSpawner)event.getBlock().getState();
