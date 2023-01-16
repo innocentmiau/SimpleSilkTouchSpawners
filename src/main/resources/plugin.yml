@@ -1,0 +1,4 @@
+name: SimpleSilkTouchSpawners
+version: '${project.version}'
+main: net.miau.simplesilktouchspawners.SimpleSilkTouchSpawners
+authors: [ Miau_ ]
