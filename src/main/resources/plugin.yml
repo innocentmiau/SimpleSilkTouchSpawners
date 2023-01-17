@@ -1,4 +1,5 @@
 name: SimpleSilkTouchSpawners
 version: '${project.version}'
 main: net.miau.simplesilktouchspawners.SimpleSilkTouchSpawners
+api-version: 1.13
 authors: [ Miau_ ]
